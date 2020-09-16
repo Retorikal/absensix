@@ -48,19 +48,9 @@
 		// For use at startup, and repeats when passing 00:00
 		function getTodayNode(){
 			var calendar = document.getElementsByTagName("table")[0];
-			var classDays = calendar.getElementsByTagName("td");
-			var currentDate = (new Date()).getDate();
+			var currentDate = var today = calendar.getElementsByClassName("bg-info");
 			
-			var isPreviousMonth = true; // Used to mark if the date is previous month's date
-			for (let classDay of classDays){
-   				classDate = parseInt(classDay.childNodes[0].textContent.trim(), 10);
-
-   				// Disable previous month mark if current date is smaller than 10 (arbitrary working thershold)
-   				if(isPreviousMonth && classDate < 10){isPreviousMonth = false;}
-   				if(!isPreviousMonth && (currentDate == classDate)){
-   					return classDay;
-   				}
-   			}
+			return currentDate;
 		}
 
 	</script>
