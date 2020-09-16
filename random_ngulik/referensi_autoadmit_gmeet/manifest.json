@@ -1,0 +1,15 @@
+{
+   "content_scripts": [ {
+      "js": [ "content_script.js" ],
+      "matches": [ "*://meet.google.com/*" ]
+   } ],
+   "description": "Automatically admit join requests from external guests to Google Meet",
+   "icons": {
+      "128": "icon128.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgzaulZbshMqEPFTpdk5Z+WG3JHFDsLl3TVvD4xAXrAAGjvD/YpIiSNG7+0TbIuJBASSaJTbMzaH53YLqQvSvGj9wc9y0apVSraNh2J2Ks6OcV3ISg0km3mDyJdLgzQUkikEn+IhJwuKz51N5Ngni/8kdVhADWaEKjflmN9CebDY6eNzfuMEdLNHn3WIG0foquOYlmxwMqq8txIiXFLgvCqYI4A15NHcihcLuFOp+s9AuEf0gCinGm5idSQseRpOLo5LZo06i7WGU3WtyUMA/iSf/Qfn/MKeR3VzaPLNOrsmpG54oMg8xfs90kwRShYKwz4zyJVccWLPYCpPwZM/eqwIDAQAB",
+   "manifest_version": 2,
+   "name": "Google Meet Auto Admit",
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "0.5"
+}

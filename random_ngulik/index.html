@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+
+	<!--Script-script ini ada di web SIX dan diperlukan buat reproduce behaviour-->
+	<script src="./jquery-3.5.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			$("a.linkpertemuan").on("click", function (e) {
+				e.preventDefault();
+				var url = $(this).data("url");
+				var kuliah = $(this).data("kuliah");
+
+				$.alert({
+					title: kuliah,
+					backgroundDismiss: true,
+					content: function () {
+						var self = this;
+						return $.ajax({
+							url: url,
+							dataType: 'html',
+							method: 'get'
+						}).done(function (response) {
+							self.setContent(response);
+							self.setTitle(response.name);
+						}).fail(function(){
+							self.setContent('Something went wrong.');
+						});
+					},
+					buttons: {
+						close: {
+							text: 'Tutup',
+							keys: ['enter', 'esc']
+						}
+					}
+				});
+			});
+		});
+	</script>
+
+	<!--Script implementasi: BUAT DIPAKE DI WEB SIX (coba dites di F12 -> console, copas fungsi ini, terus ketik getTodayNode())-->
+	<script type="text/javascript">
+		// Get td node that contains today's presence link
+		// For use at startup, and repeats when passing 00:00
+		function getTodayNode(){
+			var calendar = document.getElementsByTagName("table")[0];
+			var classDays = calendar.getElementsByTagName("td");
+			var currentDate = (new Date()).getDate();
+			
+			var isPreviousMonth = true; // Used to mark if the date is previous month's date
+			for (let classDay of classDays){
+   				classDate = parseInt(classDay.childNodes[0].textContent.trim(), 10);
+
+   				// Disable previous month mark if current date is smaller than 10 (arbitrary working thershold)
+   				if(isPreviousMonth && classDate < 10){isPreviousMonth = false;}
+   				if(!isPreviousMonth && (currentDate == classDate)){
+   					return classDay;
+   				}
+   			}
+		}
+
+	</script>
+</head>
+<body>
+
+	<div title="Dinamika Sistem dan Simulasi">
+		<a 
+			class="linkpertemuan" 
+			href="#" 
+			data-kuliah="TF3101 Dinamika Sistem dan Simulasi" 
+			data-url="/app/mahasiswa:13318056+2020-1/kelas/pertemuan/mhs/459877/93642?returnTo=/app/mahasiswa:13318056%2B2020-1/kelas/pertemuan/jadwal/mahasiswa">
+		<small>
+                                    11:00-12:00
+                                    <strong>TF3101</strong>
+                                    Dinamika Sis...
+		</small>
+		</a>
+	</div>
+
+	<div title="Dinamika Sistem dan Simulasi">
+		<a 
+			class="linkpertemuan" 
+			href="https://akademik.itb.ac.id/app/mahasiswa:13318056+2020-1/kelas/pertemuan/jadwal/mahasiswa#" 
+			data-kuliah="TF3101 Dinamika Sistem dan Simulasi" 
+			data-url="/app/mahasiswa:13318056+2020-1/kelas/pertemuan/mhs/459877/93642?returnTo=/app/mahasiswa:13318056%2B2020-1/kelas/pertemuan/jadwal/mahasiswa">
+		<small>
+                                    11:00-12:00
+                                    <strong>TF3101</strong>
+                                    Dinamika Sis...
+		</small>
+		</a>
+	</div>
+	
+	<!--
+		Catatan: implementasi autologin
+		Site: https://login.itb.ac.id/cas/login
+		Flowchart:
+			- Buka tab baru https://login.itb.ac.id/cas/login
+			- Autoclick login
+			- Close popup
+	-->
+
+	<!--
+		Daftar fungsi yang mungkin terpakai
+		- Buat check setiap berapa lama sekali
+			var autorun = setInterval(func, t): 
+			clearInterval(autorun);
+
+			// Bisa dipake buat tombol semacem "Check now!" yang ngecek presensi terus reset interval
+
+		- Autoclicker
+	-->
+
+	<!--
+		Catatan
+		Isi kotak konfirmasi kuliah bisa diakses dengan (Harus diakses dalam kondisi logged in):
+			https://akademik.itb.ac.id/app/mahasiswa:13318056+2020-1/kelas/pertemuan/mhs/459877/93642
+			format: https://akademik.itb.ac.id/app/mahasiswa:<nim>+<tahun>-<semester>/kelas/pertemuan/mhs/<id1>/<id2>
+				Ket:
+					nim			: nim
+					tahun		: tahun ajaran
+					semester	: semester
+					id1			: probably id pertemuan
+					id2			: probably id mahasiswa
+		Informasi ini didapatkan dari:
+			a (class: linkpertemuan), bagian data-url
+	-->
+
+	
+</body>
+</html>
