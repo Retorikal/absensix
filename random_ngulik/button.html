@@ -1,0 +1,28 @@
+<!--Contoh button kehadiran-->
+<!--https://akademik.itb.ac.id/app/mahasiswa:13318056+2020-1/kelas/pertemuan/mhs/460679/93642-->
+<!--Harus direquest karena perlu token, tokenya sendiri dirandom-->
+
+<form name="form" method="post" action="https://akademik.itb.ac.id/app/mahasiswa:13318056+2020-1/kelas/pertemuan/mhs/460679/93642?returnTo=/app/mahasiswa:13318056%2B2020-1/kelas/pertemuan/jadwal/mahasiswa" role="form">
+    <div class="text-center">
+    	<button type="submit" id="form_hadir" name="form[hadir]" class="btn btn-sm btn-primary btn btn-primary">
+    		Tandai Hadir
+    	</button>
+	</div>
+    <input type="hidden" id="form_returnTo" name="form[returnTo]" class="form-control" value="/app/mahasiswa:13318056+2020-1/kelas/pertemuan/jadwal/mahasiswa">
+    <input type="hidden" id="form__token" name="form[_token]" class="form-control" value="1O0KfPjeNg-icvTbEhEzy-mxAV08m2JqhCcAf5DkZ_A">
+</form>
+
+<!--Modified button kehadiran for streamlining-->
+<!--?returnTo= dihapus, form_returnTo diubah arahnya ke /kelas/pertemuan/mhs, bukan /kelas/pertemuan/jadwal-->
+<!--Kalau penggantian redirect berhasil, bisa dipakai buat success check dengan ngeliat isi tulisan Button nya-->
+
+<form name="form" method="post" action="https://akademik.itb.ac.id/app/mahasiswa:13318056+2020-1/kelas/pertemuan/mhs/460679/93642" role="form">
+    <div class="text-center">
+    	<button type="submit" id="form_hadir" name="form[hadir]" class="btn btn-sm btn-primary btn btn-primary">
+    		Tandai Hadir
+    	</button>
+	</div>
+    <input type="hidden" id="form_returnTo" name="form[returnTo]" class="form-control" value="/app/mahasiswa:13318056+2020-1/kelas/pertemuan/mhs/460679/93642">
+    <input type="hidden" id="form__token" name="form[_token]" class="form-control" value="1O0KfPjeNg-icvTbEhEzy-mxAV08m2JqhCcAf5DkZ_A">
+</form>
+
