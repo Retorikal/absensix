@@ -22,24 +22,23 @@ def login(driver, config):
 
 
 def get_active_course(driver):
-    # Get current time in HH:MM format
+    # Get current time
     current_time = datetime.datetime.now().time()
 
     # Get all today courses
     courses = driver.find_elements_by_css_selector(
         'td.bg-info a.linkpertemuan')
     for course in courses:
-        # Raw course string with format: [<duration>, <code>, <name>]
-        raw = course.text.split(maxsplit=2)
-
-        course_duration = raw[0]  # Ex: 13:00-14:00
-        # Start and end time in datetime.time type
+        # Get course start and end time in datetime.time type
+        course_duration = course.text.split()[0]  # Ex: 13:00-14:00
         course_start = datetime.time.fromisoformat(
             course_duration.split('-')[0])
         course_end = datetime.time.fromisoformat(course_duration.split('-')[1])
 
-        course_code = raw[1]  # Ex: TF3103
-        course_name = raw[2]  # Ex: Mekanika Kuantum
+        # Raw course string with format: [<code>, <name>]
+        raw = course.get_attribute('data-kuliah').split(maxsplit=1)
+        course_code = raw[0]  # Ex: TF3103
+        course_name = raw[1]  # Ex: Mekanika Kuantum
 
         # Return course if current time exist in the course time range
         if current_time > course_start and current_time < course_end:
@@ -54,7 +53,7 @@ def attend(driver):
     course_str = ' '.join(course)
     # Go to course detail page
     link = driver.find_element_by_css_selector(
-        'td.bg-info div[title="{}"] a.linkpertemuan'.format(course[1]))
+        'td.bg-info a.linkpertemuan[data-kuliah="{}"]'.format(course_str))
     link.click()
 
     # Mark the course attendance
