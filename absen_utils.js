@@ -33,16 +33,14 @@ function parseTime(str) {
 }
 
 /* Function to acquire current active course.
- * Params: none
+ * Params: <td> element containing today's courses
  * Retval: active course <a> element
  */
-function getActiveCourse() {
+function getActiveCourse(todayCourses) {
 	// Get current time
 	// currentTime = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric" });
 	currentTime = new Date()
 
-	// Get today course
-	todayCourses = getTodayNode();
 	let courses = todayCourses.getElementsByClassName('linkpertemuan');
 	for (let i = 0; i < courses.length; i++) {
 		// Get course start and end time
