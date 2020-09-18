@@ -27,6 +27,7 @@ function parseTime(str) {
 
 	time.setHours(hours);
 	time.setMinutes(minutes);
+	time.setSeconds('00');
 
 	return time;
 }
@@ -43,22 +44,22 @@ function getActiveCourse() {
 	// Get today course
 	todayCourses = getTodayNode();
 	let courses = todayCourses.getElementsByClassName('linkpertemuan');
-	courses.forEach(course => {
+	for (let i = 0; i < courses.length; i++) {
 		// Get course start and end time
-		courseDuration = course.innerHTML.split()[0];
+		courseDuration = courses[i].innerText.split(' ')[0];
 		courseStart = parseTime(courseDuration.split('-')[0]);
 		courseEnd = parseTime(courseDuration.split('-')[1]);
 
 		// Raw course string with format: [<code> <name>]
-		raw = course.getAttribute('data-kuliah').split(limit=1);
+		raw = courses[i].getAttribute('data-kuliah').split(limit=1);
 		courseCode = raw[0];
 		courseName = raw[1];
 
 		// Return course if current time exist in the course time range
 		if (currentTime > courseStart && currentTime < courseEnd) {
-			return course;
+			return courses[i];
 		}
-	});
+	}
 
 	// If no active course found, raise an error
 	throw 'No active course found';
