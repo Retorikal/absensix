@@ -2,7 +2,7 @@
  * Params: msg: message
  * Retval: none
  */
-function report(msg){
+function report(msg) {
 	document.title = "ab¢six: " + msg
 }
 
@@ -10,11 +10,58 @@ function report(msg){
  * Params: none
  * Retval: <td> cell
  */
-function getTodayNode(){
+function getTodayNode() {
 	var calendar = document.getElementsByTagName("table")[0];
 	var currentDate = calendar.getElementsByClassName("bg-info"); // Di web SiX warna tanggal hari ini beda
 
 	return currentDate[0];
+}
+
+/* Function to parse time in string format to Date object
+ * Params: time string with : as separator. Ex: '13:51'
+ * Retval: converted time in Date object
+ */
+function parseTime(str) {
+	let time = new Date();
+	let [hours, minutes] = str.split(':');
+
+	time.setHours(hours);
+	time.setMinutes(minutes);
+
+	return time;
+}
+
+/* Function to acquire current active course.
+ * Params: none
+ * Retval: active course <a> element
+ */
+function getActiveCourse() {
+	// Get current time
+	// currentTime = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric" });
+	currentTime = new Date()
+
+	// Get today course
+	todayCourses = getTodayNode();
+	let courses = todayCourses.getElementsByClassName('linkpertemuan');
+	courses.forEach(course => {
+		// Get course start and end time
+		courseDuration = course.innerHTML.split()[0];
+		courseStart = parseTime(courseDuration.split('-')[0]);
+		courseEnd = parseTime(courseDuration.split('-')[1]);
+
+		// Raw course string with format: [<code> <name>]
+		raw = course.getAttribute('data-kuliah').split(limit=1);
+		courseCode = raw[0];
+		courseName = raw[1];
+
+		// Return course if current time exist in the course time range
+		if (currentTime > courseStart && currentTime < courseEnd) {
+			return course;
+		}
+	});
+
+	// If no active course found, raise an error
+	throw 'No active course found';
 }
 
 /* Function to do HTML GET request.
@@ -26,7 +73,7 @@ function getTodayNode(){
 function getHTMLtxt(url, callback) {
 	var xhttp = new XMLHttpRequest();
 
-	xhttp.onreadystatechange = function() {
+	xhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
 			callback("<div>" + this.responseText + "</div>");
 		}
@@ -44,7 +91,7 @@ function getHTMLtxt(url, callback) {
  * TODO:
  * 		Call getHTMLtxt(url, callback) for every set interval
  */
-function markPresent(a_node){
+function markPresent(a_node) {
 	var url = a_node.getAttribute("data-url").split('?')[0] // ditch all GET params bcs gaperlu
 	var success = null;
 	/* Error codes
@@ -54,11 +101,11 @@ function markPresent(a_node){
 	* 2 	= Already attended
 	*/
 
-	var callback = function(txt) {
+	var callback = function (txt) {
 		var todayDOM = $.parseHTML(txt)[0]; // Ini fungsi jquery. Iya syntaxnya pake "$" gitu :/ SiX uda paketan sama jquery jadi sans
 		var submit_form = todayDOM.getElementsByTagName("form")[0];
 
-		if (submit_form == undefined){ // Tombolnya gaada, absensi belum dibuka
+		if (submit_form == undefined) { // Tombolnya gaada, absensi belum dibuka
 			success = 1;
 			report("Attendance not open");
 		} else {
@@ -73,17 +120,17 @@ function markPresent(a_node){
 				submit_params += "form[returnTo]=" + url + "&";
 				submit_params += "form[_token]=" + url + in_tok.getAttribute("value");
 
-				submit_xhttp.onreadystatechange = function() {
+				submit_xhttp.onreadystatechange = function () {
 					if (this.readyState == 4 && this.status == 302) {
-						if(this.responseText.search("Tandai Tidak Hadir") != -1){
+						if (this.responseText.search("Tandai Tidak Hadir") != -1) {
 							success = 0;
 							report("Success");
 						}
 					}
 				};
 
-			submit_xhttp.open('POST', url, true);
-			submit_xhttp.send(submit_params);
+				submit_xhttp.open('POST', url, true);
+				submit_xhttp.send(submit_params);
 			} else { // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
 				success = 2;
 				report("Already attended");
