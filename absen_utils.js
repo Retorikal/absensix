@@ -1,12 +1,20 @@
+/* Feedback function
+ * Params: msg: message
+ * Retval: none
+ */
+function report(msg){
+	document.title = "ab¢six: " + msg
+}
+
 /* Function to acquire today's <td> cell on the calendar.
  * Params: none
  * Retval: <td> cell
  */
 function getTodayNode(){
 	var calendar = document.getElementsByTagName("table")[0];
-	var currentDate = var today = calendar.getElementsByClassName("bg-info"); // Di web SiX warna tanggal hari ini beda
+	var currentDate = calendar.getElementsByClassName("bg-info"); // Di web SiX warna tanggal hari ini beda
 
-	return currentDate;
+	return currentDate[0];
 }
 
 /* Function to do HTML GET request.
@@ -38,7 +46,7 @@ function getHTMLtxt(url, callback) {
  */
 function markPresent(a_node){
 	var url = a_node.getAttribute("data-url").split('?')[0] // ditch all GET params bcs gaperlu
-	var success = 1;
+	var success = null;
 	/* Error codes
 	* -1 	= Others
 	* 0 	= Success
@@ -52,6 +60,7 @@ function markPresent(a_node){
 
 		if (submit_form == undefined){ // Tombolnya gaada, absensi belum dibuka
 			success = 1;
+			report("Attendance not open");
 		} else {
 			action_string = submit_form.textContent.trim()
 
@@ -68,6 +77,7 @@ function markPresent(a_node){
 					if (this.readyState == 4 && this.status == 302) {
 						if(this.responseText.search("Tandai Tidak Hadir") != -1){
 							success = 0;
+							report("Success");
 						}
 					}
 				};
@@ -76,6 +86,7 @@ function markPresent(a_node){
 			submit_xhttp.send(submit_params);
 			} else { // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
 				success = 2;
+				report("Already attended");
 			}
 		}
 	};
