@@ -34,33 +34,40 @@ function parseTime(str) {
 
 /* Function to acquire current active course.
  * Params: <td> element containing today's courses
- * Retval: active course <a> element
+ * Retval: Array containing list of (startTime, endTime, related <a> link, courseCode, courseName)
  */
-function getActiveCourse(todayCourses) {
-	// Get current time
-	// currentTime = new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric" });
-	currentTime = new Date()
+function getActiveCourses(todayCourses) {
+	let coursesList = [];
 
 	let courses = todayCourses.getElementsByClassName('linkpertemuan');
 	for (let i = 0; i < courses.length; i++) {
+		course = []
+
 		// Get course start and end time
-		courseDuration = courses[i].innerText.split(' ')[0];
-		courseStart = parseTime(courseDuration.split('-')[0]);
-		courseEnd = parseTime(courseDuration.split('-')[1]);
+		let courseDuration = courses[i].innerText.split(' ')[0];
+		let courseStart = parseTime(courseDuration.split('-')[0]);
+		let courseEnd = parseTime(courseDuration.split('-')[1]);
 
 		// Raw course string with format: [<code> <name>]
-		raw = courses[i].getAttribute('data-kuliah').split(limit=1);
-		courseCode = raw[0];
-		courseName = raw[1];
+		let raw = courses[i].getAttribute('data-kuliah').match(/^(\S+)\s(.*)/).slice(1) // Some regex magic. Don't ask. It works.
+		let courseCode = raw[0];
+		let courseName = raw[1];
 
-		// Return course if current time exist in the course time range
-		if (currentTime > courseStart && currentTime < courseEnd) {
-			return courses[i];
-		}
+		// course.push(courseDuration);
+		course.push(courseStart);
+		course.push(courseEnd);
+		course.push(courseCode);
+		course.push(courseName);
+
+		coursesList.push(course)
 	}
 
 	// If no active course found, raise an error
-	throw 'No active course found';
+	if ( coursesList == []){
+		throw 'No course found';	
+	}
+	
+	return coursesList;
 }
 
 /* Function to do HTML GET request.
