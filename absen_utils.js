@@ -31,6 +31,11 @@ function getTodayCourses() {
 
 	let coursesList = [];
 
+	// If no active course found, raise an error
+	if ( coursesList == []){
+		throw 'No course found';	
+	}
+
 	let courses = todayCourseTD.getElementsByClassName('linkpertemuan');
 	for (let i = 0; i < courses.length; i++) {
 		course = []
@@ -40,6 +45,9 @@ function getTodayCourses() {
 		let courseStart = parseTime(courseDuration.split('-')[0]);
 		let courseEnd = parseTime(courseDuration.split('-')[1]);
 
+		// Course URL
+		let courseUrl = courses[i].getAttribute("data-url").split('?')[0] // ditch all GET params bcs gaperlu
+
 		// Raw course string with format: [<code> <name>]
 		let raw = courses[i].getAttribute('data-kuliah').match(/^(\S+)\s(.*)/).slice(1) // Some regex magic. Don't ask. It works.
 		let courseCode = raw[0];
@@ -48,15 +56,11 @@ function getTodayCourses() {
 		// course.push(courseDuration);
 		course.push(courseStart);
 		course.push(courseEnd);
+		course.push(courseUrl);
 		course.push(courseCode);
 		course.push(courseName);
 
 		coursesList.push(course)
-	}
-
-	// If no active course found, raise an error
-	if ( coursesList == []){
-		throw 'No course found';	
 	}
 	
 	return coursesList;
@@ -84,13 +88,12 @@ function getHTMLtxt(url, callback) {
 
 /* Function to initiate attend attempt.
  * Params:
- *		a_node: attendance link <a> node DOM object
+ *		url: attendance link
  * Retval: none
  * TODO:
  * 		Call getHTMLtxt(url, callback) for every set interval
  */
-function markPresent(a_node) {
-	var url = a_node.getAttribute("data-url").split('?')[0] // ditch all GET params bcs gaperlu
+function markPresent(url) {
 	var success = null;
 	/* Error codes
 	* -1 	= Others
