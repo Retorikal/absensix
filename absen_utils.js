@@ -6,17 +6,6 @@ function report(msg) {
 	document.title = "ab¢six: " + msg
 }
 
-/* Function to acquire today's <td> cell on the calendar.
- * Params: none
- * Retval: <td> cell
- */
-function getTodayNode() {
-	var calendar = document.getElementsByTagName("table")[0];
-	var currentDate = calendar.getElementsByClassName("bg-info"); // Di web SiX warna tanggal hari ini beda
-
-	return currentDate[0];
-}
-
 /* Function to parse time in string format to Date object
  * Params: time string with : as separator. Ex: '13:51'
  * Retval: converted time in Date object
@@ -32,14 +21,17 @@ function parseTime(str) {
 	return time;
 }
 
-/* Function to acquire current active course.
- * Params: <td> element containing today's courses
+/* Function to acquire today's courses.
+ * Params: none
  * Retval: Array containing list of (startTime, endTime, related <a> link, courseCode, courseName)
  */
-function getActiveCourses(todayCourses) {
+function getTodayCourses() {
+	let calendar = document.getElementsByTagName("table")[0];
+	let todayCourseTD = calendar.getElementsByClassName("bg-info")[0]
+
 	let coursesList = [];
 
-	let courses = todayCourses.getElementsByClassName('linkpertemuan');
+	let courses = todayCourseTD.getElementsByClassName('linkpertemuan');
 	for (let i = 0; i < courses.length; i++) {
 		course = []
 
