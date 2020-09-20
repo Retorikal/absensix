@@ -60,6 +60,7 @@ function getTodayCourses(debug = false) {
 		course.push(courseUrl);
 		course.push(courseCode);
 		course.push(courseName);
+		course.push(null); // Success status for attend attempt
 
 		coursesList.push(course)
 	}
@@ -94,28 +95,36 @@ function getHTMLtxt(url, callback) {
 
 /* Function to initiate attend attempt.
  * Params:
- *		course: array containing (startTime, endTime, link string, courseCode, courseName)
+ *		course: array containing (startTime, endTime, link string, courseCode, courseName, status)
  * Retval: none
  * TODO:
  * 		Call getHTMLtxt(url, callback) for every set interval
  */
 function markPresent(course) {
-	var success = null;
 	var url = course[2];
 	/* Error codes
 	* -1 	= Others
 	* 0 	= Success
 	* 1 	= Attendance not yet open
 	* 2 	= Already attended
+	* 3		= Already past course end time
 	*/
 
 	var callback = function (txt) {
 		var todayDOM = $.parseHTML(txt)[0]; // Ini fungsi jquery. Iya syntaxnya pake "$" gitu :/ SiX uda paketan sama jquery jadi sans
 		var submit_form = todayDOM.getElementsByTagName("form")[0];
 
-		if (submit_form == undefined) { // Tombolnya gaada, absensi belum dibuka
-			success = 1;
-			report("Attendance not open");
+		var now = (new Date()).getTime();
+		var end = course[1].getTime();
+
+		if (submit_form == undefined) { // Tombolnya gaada
+			if (now > end){ // Udah lewat. Error code buat nyerah
+				course[5] = 3;
+				report("Attendance probably already ended. Sorry.");
+			} else { // Belum dibuka
+				course[5] = 1;
+				report("Attendance not open");
+			}
 		} else {
 			action_string = submit_form.textContent.trim()
 
@@ -131,52 +140,80 @@ function markPresent(course) {
 				submit_xhttp.onreadystatechange = function () {
 					if (this.readyState == 4 && this.status == 302) {
 						if (this.responseText.search("Tandai Tidak Hadir") != -1) {
-							success = 0;
+							course[5] = 0;
 							report("Success");
 						}
+					} else {
+						course[5] = -1;
+						report("An unknown error has occured");
 					}
 				};
 
 				submit_xhttp.open('POST', url, true);
 				submit_xhttp.send(submit_params);
 			} else { // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
-				success = 2;
+				course[5] = 2;
 				report("Already attended");
 			}
 		}
 	};
 
+	var primeRetry = function(course){
+		setTimeout(() => {
+			if(course[5] != 0 || course[5] != 2 || course[5] != 3){ // if not yet succeded, known already attended, or already passed, schedule a retry..
+				getHTMLtxt(url, callback);
+				primeRetry(course);
+			}
+		}, 8 * 60 * 1000); // .. in 8 minutes. TODO: make retry delay global var
+	}
+
+	// There will be 1 extra retry after success by default. If nothing else can be done, the retry will be silent.
 	getHTMLtxt(url, callback);
+	primeRetry(course);
 }
 
-// Calculate time until classes, return value in miliseconds
+/* Function to get time difference between now and course start
+ * Params:
+ *		course: array containing (startTime, endTime, link string, courseCode, courseName, status)
+ * Retval: array containing time difference in ms: (to course start (+ 2 minute offset)), and (to course finish).
+ * TODO: when exposing configuration, time offset needs to be set
+ */
 function untilEvent(course) {
-	var clock = new Date();
-	var untilHor = course[0].getHours() - clock.getHours();
-	var untilMin = course[0].getMinutes() - clock.getMinutes();
-	return ((untilHor * 60) + untilMin) * 60 * 1000;
+	var now = new Date().getTime();
+	var targetStart = course[0].getTime();
+	var targetEnd = course[1].getTime();
+	return [(targetStart - now) + (1000 * 60 * 2), (targetEnd - now)];
 }
 
-// ========== SETUP ==========
+/* Main routine
+ * Params: none
+ * Retval: none
+ */
+function main(courses){
+	for (let i = courses.length - 1; i >= 0; i--) { // Reverse iteration to prevent index shift while performing element removal 
+		t_diff = untilEvent(courses[i]);
+
+		if (t_diff[0] > 0) { // Course still coming later
+			report("Scheduled attendance for " + courses[i][3]);
+			setTimeout(() => {markPresent(courses[i])}, t_diff[0]);
+		} else if (t_diff[0] <= 0 && t_diff[1] >= 0) { // Course currently active, immediately initiate attempt
+			report("Attending " + courses[i][3]);
+			markPresent(courses[i]);
+		} else { // Course has passed, remove element
+			report("Skipping " + courses[i][3]);
+			courses.splice(i, 1);
+		}
+	}
+}
+
+// ========== EXEC ==========
 report("Auto-attendance has been loaded.");
 
 try {
 	courses = getTodayCourses();
-	timeUntilEvent = [];
-	courses.forEach(course => { timeUntilEvent.push(untilEvent(course)); })
+	main(courses);
 }
 catch {
 	report("There is no active date today.");
 }
 
-// ========== MAIN ==========
-for (let i = 0; i < timeUntilEvent.length; i++) {
-	if (timeUntilEvent[i] > 0) {
-		setTimeout(markPresent(courses[i]), timeUntilEvent[i])
-		// if markPresent success code returns 1 = Attendance not yet open
-		// setTimeout(markPresent(courses[i]), 2_min_delay)
-		// success code not yet returned, need revision
-	}
-	// update the delay to next Event
-	courses.forEach(course => { timeUntilEvent.push(untilEvent(course)); })
-}
