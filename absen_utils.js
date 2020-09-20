@@ -149,34 +149,13 @@ function markPresent(course) {
 	getHTMLtxt(url, callback);
 }
 
-// Calculate time until classes, return value in miliseconds
-function untilEvent(course) {
-	var clock = new Date();
-	var untilHor = course[0].getHours() - clock.getHours();
-	var untilMin = course[0].getMinutes() - clock.getMinutes();
-	return ((untilHor * 60) + untilMin) * 60 * 1000;
-}
-
-// ========== SETUP ==========
 report("Auto-attendance has been loaded.");
 
 try {
 	courses = getTodayCourses();
-	timeUntilEvent = [];
-	courses.forEach(course => { timeUntilEvent.push(untilEvent(course)); })
+	interval = 15 * 60 * 1000;
+	setInterval(() => courses.forEach(course => markPresent(course)), interval);
 }
 catch {
 	report("There is no active date today.");
-}
-
-// ========== MAIN ==========
-for (let i = 0; i < timeUntilEvent.length; i++) {
-	if (timeUntilEvent[i] > 0) {
-		setTimeout(markPresent(courses[i]), timeUntilEvent[i])
-		// if markPresent success code returns 1 = Attendance not yet open
-		// setTimeout(markPresent(courses[i]), 2_min_delay)
-		// success code not yet returned, need revision
-	}
-	// update the delay to next Event
-	courses.forEach(course => { timeUntilEvent.push(untilEvent(course)); })
 }
