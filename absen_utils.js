@@ -29,11 +29,11 @@ function getTodayCourses(debug = false) {
 	let calendar = document.getElementsByTagName("table")[0];
 	let todayCourseTD = calendar.getElementsByClassName("bg-info")[0];
 	let coursesList = [];
-	
-	if(debug) // Won't get anything on weekends. Use debug = true to get whatever <td> there is.
+
+	if (debug) // Won't get anything on weekends. Use debug = true to get whatever <td> there is.
 		todayCourseTD = calendar.getElementsByTagName("td")[0];
 
-	if (todayCourseTD == undefined){
+	if (todayCourseTD == undefined) {
 		throw "No active date on calendar."
 	}
 
@@ -63,11 +63,11 @@ function getTodayCourses(debug = false) {
 
 		coursesList.push(course)
 	}
-	
+
 	// If no active course found, raise an error
-	if ( coursesList == []){
-		throw 'No course found';	
-	} 
+	if (coursesList == []) {
+		throw 'No course found';
+	}
 
 	return coursesList;
 }
@@ -151,9 +151,11 @@ function markPresent(course) {
 
 report("Auto-attendance has been loaded.");
 
-try{
-    getTodayCourses()
+try {
+	courses = getTodayCourses();
+	interval = 15 * 60 * 1000;
+	setInterval(() => courses.forEach(course => markPresent(course)), interval);
 }
-catch{
-    report("There is no active date today.");
+catch {
+	report("There is no active date today.");
 }
