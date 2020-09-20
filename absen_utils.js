@@ -152,9 +152,17 @@ function markPresent(course) {
 report("Auto-attendance has been loaded.");
 
 try {
-	courses = getTodayCourses();
+	courses = getTodayCourses(debug = true);
 	interval = 15 * 60 * 1000;
-	setInterval(() => courses.forEach(course => markPresent(course)), interval);
+	setInterval(() => {
+		currentTime = new Date();
+		courses.forEach(course => {
+			// Hanya mark active course
+			if (currentTime > course[0] && currentTime < course[1]) {
+				markPresent(course);
+			}
+		})
+	}, interval);
 }
 catch {
 	report("There is no active date today.");
