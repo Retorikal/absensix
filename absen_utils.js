@@ -115,7 +115,7 @@ function markPresent(course) {
 
 		if (submit_form == undefined) { // Tombolnya gaada, absensi belum dibuka
 			success = 1;
-			report("Attendance not open");
+			report(course[3] + ": Attendance not open");
 		} else {
 			action_string = submit_form.textContent.trim()
 
@@ -132,7 +132,7 @@ function markPresent(course) {
 					if (this.readyState == 4 && this.status == 302) {
 						if (this.responseText.search("Tandai Tidak Hadir") != -1) {
 							success = 0;
-							report("Success");
+							report(course[3] + ": Success");
 						}
 					}
 				};
@@ -141,7 +141,7 @@ function markPresent(course) {
 				submit_xhttp.send(submit_params);
 			} else { // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
 				success = 2;
-				report("Already attended");
+				report(course[3] + ": Already attended");
 			}
 		}
 	};
