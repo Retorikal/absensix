@@ -99,7 +99,7 @@ function getHTMLtxt(url, callback) {
  * TODO:
  * 		Call getHTMLtxt(url, callback) for every set interval
  */
-function markPresent(url) {
+function markPresent(course) {
 	var success = null;
 	var url = course[2];
 	/* Error codes
