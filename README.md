@@ -1,9 +1,12 @@
 # absensix
 Auto-absen untuk sistem informasi akademik ITB
 
+# WARNING!
+This plugin is currently not in a working state, but all relevant functions can be tested on console.
+
 # Instalasi
-1. Download (Ada 2 cara):
-Cara 1: Download zip file proyek ini dari github: https://github.com/Retorikal/absensix/archive/master.zip, lalu extract
+1. Download (Ada 2 cara):<br/>
+Cara 1: Download zip file proyek ini dari github: https://github.com/Retorikal/absensix/archive/master.zip, lalu extract<br/>
 Cara 2: Clone git repository
 
 2. Buka chrome://extensions/
