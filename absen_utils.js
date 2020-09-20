@@ -3,7 +3,7 @@
  * Retval: none
  */
 function report(msg) {
-	document.title = "ab¢six: " + msg
+	$.notify("ab¢6: " + msg)
 }
 
 /* Function to parse time in string format to Date object
@@ -23,17 +23,18 @@ function parseTime(str) {
 
 /* Function to acquire today's courses.
  * Params: none
- * Retval: Array containing list of (startTime, endTime, related <a> link, courseCode, courseName)
+ * Retval: Array containing list of (startTime, endTime, link string, courseCode, courseName)
  */
-function getTodayCourses() {
+function getTodayCourses(debug = false) {
 	let calendar = document.getElementsByTagName("table")[0];
-	let todayCourseTD = calendar.getElementsByClassName("bg-info")[0]
-
+	let todayCourseTD = calendar.getElementsByClassName("bg-info")[0];
 	let coursesList = [];
+	
+	if(debug) // Won't get anything on weekends. Use debug = true to get whatever <td> there is.
+		todayCourseTD = calendar.getElementsByTagName("td")[0];
 
-	// If no active course found, raise an error
-	if ( coursesList == []){
-		throw 'No course found';	
+	if (todayCourseTD == undefined){
+		throw "No active date on calendar."
 	}
 
 	let courses = todayCourseTD.getElementsByClassName('linkpertemuan');
@@ -63,6 +64,11 @@ function getTodayCourses() {
 		coursesList.push(course)
 	}
 	
+	// If no active course found, raise an error
+	if ( coursesList == []){
+		throw 'No course found';	
+	} 
+
 	return coursesList;
 }
 
@@ -88,13 +94,14 @@ function getHTMLtxt(url, callback) {
 
 /* Function to initiate attend attempt.
  * Params:
- *		url: attendance link
+ *		course: array containing (startTime, endTime, link string, courseCode, courseName)
  * Retval: none
  * TODO:
  * 		Call getHTMLtxt(url, callback) for every set interval
  */
 function markPresent(url) {
 	var success = null;
+	var url = course[2];
 	/* Error codes
 	* -1 	= Others
 	* 0 	= Success
@@ -140,4 +147,13 @@ function markPresent(url) {
 	};
 
 	getHTMLtxt(url, callback);
+}
+
+report("Auto-attendance has been loaded.");
+
+try{
+    getTodayCourses()
+}
+catch{
+    report("There is no active date today.");
 }
