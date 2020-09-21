@@ -2,8 +2,11 @@
  * Params: msg: message
  * Retval: none
  */
-function report(msg) {
-	$.notify("ab¢6: " + msg)
+function report(msg, silent = false) {
+	console.log("ab¢6: " + msg);
+	if(!silent){
+		$.notify("ab¢6: " + msg);
+	}
 }
 
 /* Function to parse time in string format to Date object
@@ -129,27 +132,32 @@ function markPresent(course) {
 			action_string = submit_form.textContent.trim()
 
 			if (action_string == "Tandai Hadir") { // Bisa menandai hadir. Langsung gow
-				let in_tok = submit_form.getElementById("form__token");
+				let in_tok = submit_form.getElementsByTagName("input")[1]
 				let submit_xhttp = new XMLHttpRequest();
 				let submit_params = ""
 
-				submit_params += "form[hadir]=&";
-				submit_params += "form[returnTo]=" + url + "&";
-				submit_params += "form[_token]=" + url + in_tok.getAttribute("value");
+				submit_xhttp.open('POST', url, true);
+				submit_xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				submit_params += encodeURI("form[hadir]") + "=&";
+				submit_params += encodeURI("form[returnTo]") + "=" + encodeURIComponent(url) + "&";
+				submit_params += encodeURI("form[_token]") + "=" + encodeURIComponent(in_tok.getAttribute("value"));
 
 				submit_xhttp.onreadystatechange = function () {
-					if (this.readyState == 4 && this.status == 302) {
+					if (this.readyState == 4 && this.status == 200) {
 						if (this.responseText.search("Tandai Tidak Hadir") != -1) {
 							course[5] = 0;
 							report("Success");
 						}
+					} else if (this.status == 200){
+					} else if (this.status == 404){
+						course[5] = -1;
+						report(course[3] + ": A not found error has occured");
 					} else {
 						course[5] = -1;
-						report("An unknown error has occured");
+						report(course[3] + ": An unknown error has occured");
 					}
 				};
 
-				submit_xhttp.open('POST', url, true);
 				submit_xhttp.send(submit_params);
 			} else { // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
 				course[5] = 2;
@@ -194,7 +202,7 @@ function main(courses){
 		t_diff = untilEvent(courses[i]);
 
 		if (t_diff[0] > 0) { // Course still coming later
-			report("Scheduled attendance for " + courses[i][3]);
+			report(courses[i][3] + ": Scheduled attendance", silent = true);
 			setTimeout(() => {markPresent(courses[i])}, t_diff[0]);
 		} else if (t_diff[0] <= 0 && t_diff[1] >= 0) { // Course currently active, immediately initiate attempt
 			report("Attending " + courses[i][3]);
