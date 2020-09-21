@@ -207,9 +207,8 @@ function main(courses){
 		} else if (t_diff[0] <= 0 && t_diff[1] >= 0) { // Course currently active, immediately initiate attempt
 			report("Attending " + courses[i][3]);
 			markPresent(courses[i]);
-		} else { // Course has passed, remove element
+		} else { // Course has passed, ignore
 			report("Skipping " + courses[i][3], silent = true);
-			courses.splice(i, 1);
 		}
 	}
 }

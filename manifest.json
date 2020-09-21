@@ -15,7 +15,7 @@
 		"js": [ "loader.js" ]
 	}],
 
-	"web_accessible_resources": ["absen_utils.js"],
+	"web_accessible_resources": ["absen_utils.js","absen_utils.min.js"],
 
 	"permissions": [
 		"activeTab"
