@@ -161,7 +161,7 @@ function markPresent(course) {
 				submit_xhttp.send(submit_params);
 			} else { // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
 				course[5] = 2;
-				report(course[3] + ": lready attended");
+				report(course[3] + ": Already attended");
 			}
 		}
 	};
