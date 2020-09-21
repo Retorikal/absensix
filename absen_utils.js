@@ -208,7 +208,7 @@ function main(courses){
 			report("Attending " + courses[i][3]);
 			markPresent(courses[i]);
 		} else { // Course has passed, remove element
-			report("Skipping " + courses[i][3]);
+			report("Skipping " + courses[i][3], silent = true);
 			courses.splice(i, 1);
 		}
 	}
