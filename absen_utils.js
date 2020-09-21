@@ -123,10 +123,10 @@ function markPresent(course) {
 		if (submit_form == undefined) { // Tombolnya gaada
 			if (now > end){ // Udah lewat. Error code buat nyerah
 				course[5] = 3;
-				report("Attendance probably already ended. Sorry.");
+				report(course[3] + ": Attendance probably already ended. Sorry.");
 			} else { // Belum dibuka
 				course[5] = 1;
-				report("Attendance not open");
+				report(course[3] + ": Attendance not open");
 			}
 		} else {
 			action_string = submit_form.textContent.trim()
@@ -146,7 +146,7 @@ function markPresent(course) {
 					if (this.readyState == 4 && this.status == 200) {
 						if (this.responseText.search("Tandai Tidak Hadir") != -1) {
 							course[5] = 0;
-							report("Success");
+							report(course[3] + ": Success");
 						}
 					} else if (this.status == 200){
 					} else if (this.status == 404){
@@ -161,7 +161,7 @@ function markPresent(course) {
 				submit_xhttp.send(submit_params);
 			} else { // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
 				course[5] = 2;
-				report("Already attended");
+				report(course[3] + ": lready attended");
 			}
 		}
 	};
