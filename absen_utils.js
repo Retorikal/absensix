@@ -190,7 +190,7 @@ function untilEvent(course) {
 	var now = new Date().getTime();
 	var targetStart = course[0].getTime();
 	var targetEnd = course[1].getTime();
-	return [(targetStart - now) + (1000 * 60 * 2), (targetEnd - now)];
+	return [(targetStart - now) + (1000 * 60 * 1), (targetEnd - now)]; // offset 1 minute
 }
 
 /* Main routine
@@ -198,7 +198,7 @@ function untilEvent(course) {
  * Retval: none
  */
 function main(courses){
-	for (let i = courses.length - 1; i >= 0; i--) { // Reverse iteration to prevent index shift while performing element removal 
+	for (let i = 0; i < courses.length; i++) {
 		t_diff = untilEvent(courses[i]);
 
 		if (t_diff[0] > 0) { // Course still coming later
