@@ -168,7 +168,7 @@ function markPresent(course) {
 
 	var primeRetry = function(){
 		setTimeout(() => {
-			if(course[5] != 0 || course[5] != 2 || course[5] != 3){ // if not yet succeded, known already attended, or already passed, schedule a retry..
+			if(course[5] == -1 || course[5] == 1){ // if not yet succeded, known already attended, or already passed, schedule a retry..
 				getHTMLtxt(url, callback);
 				primeRetry();
 			}
