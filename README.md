@@ -18,4 +18,4 @@ Cara 2: Clone git repository
 5. Browse lalu klik folder "absensix" (didapatkan dari langkah pertama)
 6. Plugin sudah bisa dipakai. Bila ada pesan muncul saat masuk ke halaman jadwal kelas SiX, maka extension sudah termuat dengan benar.
 
-Bila ada update baru, perbarui isi folder absensix (dengan git pull atau download zip dan extract-overwrite), lalu klik tombol reload di [chrome://extensions/](chrome://extensions/)
+Bila ada update baru, perbarui isi folder absensix (dengan git pull atau download zip dan extract-overwrite), lalu klik tombol reload di sebelah switch untuk mengaktifkan plugin. [chrome://extensions/](chrome://extensions/)

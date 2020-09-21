@@ -166,18 +166,18 @@ function markPresent(course) {
 		}
 	};
 
-	var primeRetry = function(course){
+	var primeRetry = function(){
 		setTimeout(() => {
 			if(course[5] != 0 || course[5] != 2 || course[5] != 3){ // if not yet succeded, known already attended, or already passed, schedule a retry..
 				getHTMLtxt(url, callback);
-				primeRetry(course);
+				primeRetry();
 			}
 		}, 8 * 60 * 1000); // .. in 8 minutes. TODO: make retry delay global var
 	}
 
 	// There will be 1 extra retry after success by default. If nothing else can be done, the retry will be silent.
 	getHTMLtxt(url, callback);
-	primeRetry(course);
+	primeRetry();
 }
 
 /* Function to get time difference between now and course start
