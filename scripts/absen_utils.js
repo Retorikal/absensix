@@ -1,16 +1,27 @@
 /* Feedback function
- * Params: msg: message
+ * Params: 
+ * 		msg: message
+ * 		silent: boolean, determines if the message appears as page notification
+ * 		msgType: string, determines message type
+ *		system: determines if the message will appear as system notification	
  * Retval: none
  */
-function report(msg, silent = false, msgType = "info") {
-	console.log("ab¢6: " + msg);
-	if (!silent) {
+function report(msg, silent = false, msgType = "info", system = false) {
+	procMsg = "ab¢6: " + msg;
+	console.log(procMsg);
+	if(!silent){
 		$.notify(
-			{ message: "ab¢6: " + msg }, {
-			type: msgType,
-			placement: { align: "center" }
-		}
+			{message: procMsg}, {
+				type: msgType,
+				placement: {align: "center"}
+			}
 		);
+	}
+	if(system){
+		new Notification('ab¢6 Auto-attendance',{
+			body: msg,
+			icon: '/favicon.ico'
+		});
 	}
 }
 
@@ -119,16 +130,18 @@ function markPresent(course) {
 	*/
 
 	var callback = function (txt) {
-		var todayDOM = $.parseHTML(txt)[0]; // Ini fungsi jquery. Iya syntaxnya pake "$" gitu :/ SiX uda paketan sama jquery jadi sans
+		var todayDOM = $.parseHTML(txt)[0];
 		var submit_form = todayDOM.getElementsByTagName("form")[0];
 
 		var now = (new Date()).getTime();
 		var end = course[1].getTime();
 
+		report(course[3] + ": " + course[4] + " now active!", true, "info", true);
+
 		if (submit_form == undefined) { // Tombolnya gaada
 			if (now > end + (end_offset * 60 * 1000)) { // Udah lewat after offset. Error code buat nyerah
 				course[5] = 3;
-				report(course[3] + ": Attendance probably already ended. Sorry.", false, "danger");
+				report(course[3] + ": Attendance probably already ended. Sorry.", false, "danger", true);
 			} else { // Belum dibuka
 				course[5] = 1;
 				report(course[3] + ": Attendance not open", false, "warning");
@@ -151,22 +164,22 @@ function markPresent(course) {
 					if (this.readyState == 4 && this.status == 200) {
 						if (this.responseText.search("Tandai Tidak Hadir") != -1) {
 							course[5] = 0;
-							report(course[3] + ": Success", false, "success");
+							report(course[3] + ": Attendance successful", false, "success", true);
 						}
 					} else if (this.status == 200) {
 					} else if (this.status == 404) {
 						course[5] = -1;
-						report(course[3] + ": A not found error has occured", false, "danger");
+						report(course[3] + ": A not found error has occured. Please reload the page.", false, "danger", true);
 					} else {
 						course[5] = -1;
-						report(course[3] + ": An unknown error has occured", false, "danger");
+						report(course[3] + ": An unknown error has occured. Please reload the page.", false, "danger", true);
 					}
 				};
 
 				submit_xhttp.send(submit_params);
 			} else { // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
 				course[5] = 2;
-				report(course[3] + ": Already attended", false, "info");
+				report(course[3] + ": Already attended", false, "info", true);
 			}
 		}
 	};
@@ -220,6 +233,7 @@ function main(courses) {
 		}
 	}
 }
+
 
 chrome.runtime.onMessage.addListener(
 	function (request) {

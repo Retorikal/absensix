@@ -18,5 +18,7 @@
 			"/scripts/bootstrap-notify.min.js",
 			"/scripts/absen_utils.js"
 		]
-	}]
+	}],
+
+	"permissions": ["notifications"]
 }

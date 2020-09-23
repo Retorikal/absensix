@@ -31,7 +31,7 @@ Setelah plugin terpasang, buka halaman jadwal kelas di SiX, lalu biarkan. Selama
 
 # Update
 
-Bila ada update baru, perbarui isi folder absensix (dengan git pull atau download zip dan extract-overwrite), lalu klik tombol reload di sebelah switch untuk mengaktifkan plugin. [chrome://extensions/](chrome://extensions/)
+Bila ada update baru, perbarui isi folder absensix (dengan git pull atau download zip dan extract-overwrite), lalu klik tombol reload di sebelah switch untuk mengaktifkan plugin di [chrome://extensions/](chrome://extensions/)
 
 # Development plan
 

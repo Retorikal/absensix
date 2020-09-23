@@ -3,12 +3,13 @@
 <head>
 	<link rel="stylesheet" href="/popup/popup.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <script src="/popup/popup.js"></script>
 </head>
 <body style="width: 200px">
 
     <center><h2>ab&cent;6 auto-attendance</h2></center>
     <center><h4>Hover on options to see details.</h4><center>
-	<form class="config section">
+	<div class="config section">
         <div class="flex row section">
             <label for="interval"class="tooltip"
             title="Minutes to wait after course starts before starting attendance attempts">
@@ -33,12 +34,12 @@
 			<input type="number" class="input" name="interval" id="repeat_delay">
 		</div>
 
-		<div class="flex row section">
+		<div class="flex row section right">
             <button id="updateButton">Update</button>
             <script src="popup_utils.js" type="text/javascript"></script>
         </div>
 
-	</form>
+	</div>
     <a class="flex row sponsor section gopay" target="_blank" href="https://trakteer.id/Retorikal/posts">
         <img class="inline" src="/icons/gopay.svg">
         <span class="inline">Support at trakteer.id</span>
