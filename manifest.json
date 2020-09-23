@@ -1,13 +1,14 @@
 {
 	"manifest_version": 2,
 
-	"name": "absensix",
+	"name": "Absensix",
 	"description": "Extension for SIX auto-attendance.",
 	"version": "1.0",
 
 	"browser_action": {
 		"default_popup": "popup.html",
-		"default_icon": "favicon.png"
+		"default_icon": "favicon.png",
+		"default_title": "Absensix auto-attendance"
 	},
 
 	"content_scripts": [{
@@ -15,9 +16,5 @@
 		"js": [ "loader.js" ]
 	}],
 
-	"web_accessible_resources": ["absen_utils.js","absen_utils.min.js"],
-
-	"permissions": [
-		"activeTab"
-	]
+	"web_accessible_resources": ["absen_utils.js","absen_utils.min.js"]
 }

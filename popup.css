@@ -26,7 +26,7 @@ h4{
 }
 
 .section{
-	margin-bottom: 0.5rem;
+	margin-bottom: 5px;
 }
 
 .tooltip{
@@ -40,14 +40,28 @@ h4{
 
 .sponsor{
 	padding: 4px;
-	margin-bottom: 0.5rem;
 	border-radius: 10px;
-	background-color: #036;
 	color: white;
+	opacity: 0.8;
+}
+
+.gopay{
+	background-color: #036;
+}
+
+.github{
+	background-color: #111;
+}
+
+.config{
+	background-color: #dddddd;
+	padding: 5px; 
 }
 
 .inline{
 	display: inline-block;
 	vertical-align: middle;
 	padding-right: 3px;
+	height: 16px;
+	width: auto;
 }
