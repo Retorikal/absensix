@@ -2,10 +2,15 @@
  * Params: msg: message
  * Retval: none
  */
-function report(msg, silent = false) {
+function report(msg, silent = false, msgType = "info") {
 	console.log("ab¢6: " + msg);
 	if(!silent){
-		$.notify("ab¢6: " + msg);
+		$.notify(
+			{message: "ab¢6: " + msg}, {
+				type: msgType,
+				placement: {align: "center"}
+			}
+		);
 	}
 }
 
@@ -123,10 +128,10 @@ function markPresent(course) {
 		if (submit_form == undefined) { // Tombolnya gaada
 			if (now > end + (end_offset * 60 * 1000)){ // Udah lewat after offset. Error code buat nyerah
 				course[5] = 3;
-				report(course[3] + ": Attendance probably already ended. Sorry.");
+				report(course[3] + ": Attendance probably already ended. Sorry.", false, "danger");
 			} else { // Belum dibuka
 				course[5] = 1;
-				report(course[3] + ": Attendance not open");
+				report(course[3] + ": Attendance not open", false, "warning");
 			}
 		} else {
 			action_string = submit_form.textContent.trim()
@@ -146,22 +151,22 @@ function markPresent(course) {
 					if (this.readyState == 4 && this.status == 200) {
 						if (this.responseText.search("Tandai Tidak Hadir") != -1) {
 							course[5] = 0;
-							report(course[3] + ": Success");
+							report(course[3] + ": Success", false, "success");
 						}
 					} else if (this.status == 200){
 					} else if (this.status == 404){
 						course[5] = -1;
-						report(course[3] + ": A not found error has occured");
+						report(course[3] + ": A not found error has occured", false, "danger");
 					} else {
 						course[5] = -1;
-						report(course[3] + ": An unknown error has occured");
+						report(course[3] + ": An unknown error has occured", false, "danger");
 					}
 				};
 
 				submit_xhttp.send(submit_params);
 			} else { // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
 				course[5] = 2;
-				report(course[3] + ": Already attended");
+				report(course[3] + ": Already attended", false, "info");
 			}
 		}
 	};
@@ -205,13 +210,13 @@ function main(courses){
 		t_diff = untilEvent(courses[i]);
 
 		if (t_diff[0] > 0) { // Course still coming later
-			report(courses[i][3] + ": Scheduled attendance", silent = true);
+			report(courses[i][3] + ": Scheduled attendance", true);
 			setTimeout(() => {markPresent(courses[i])}, t_diff[0]);
 		} else if (t_diff[0] <= 0 && t_diff[1] >= 0) { // Course currently active, immediately initiate attempt
-			report("Attending " + courses[i][3]);
+			report("Attending " + courses[i][3], false, "info");
 			markPresent(courses[i]);
 		} else { // Course has passed, ignore
-			report("Skipping " + courses[i][3], silent = true);
+			report("Skipping " + courses[i][3], true, "info");
 		}
 	}
 }
@@ -220,7 +225,6 @@ function main(courses){
 report("Auto-attendance has been loaded.");
 
 // global vars
-
 start_offset = 1;
 end_offset = 5;
 repeat_delay = 5;
