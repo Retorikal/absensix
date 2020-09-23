@@ -121,7 +121,7 @@ function markPresent(course) {
 		var end = course[1].getTime();
 
 		if (submit_form == undefined) { // Tombolnya gaada
-			if (now > end + (end_offset * 60 * 1000)){ // Udah lewat after offset atau ada keterangan "Presensi mandiri dapat..". Error code buat nyerah
+			if (now > end + (end_offset * 60 * 1000)){ // Udah lewat after offset. Error code buat nyerah
 				course[5] = 3;
 				report(course[3] + ": Attendance probably already ended. Sorry.");
 			} else { // Belum dibuka
