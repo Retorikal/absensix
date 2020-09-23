@@ -1,14 +1,14 @@
 # absensix
-Auto-absen untuk sistem informasi akademik ITB
+Auto-absen untuk sistem informasi akademik ITB berupa plugin chrome.
 
 # WARNING!
 Plugin ini masih dalam tahap testing, sehingga reliabilitynya belum bisa dijamin.</br>
 Beberapa masalah yang diketahui: </br>
 1. Belum bisa mengabsen 2 hari nonstop
 
-2. Unconfirmed issue mengenai suspended timeout
+2. Login timeout
 
-3. Login timeout
+3. Konfigurasi di popup belum fungsional
 
 # Instalasi
 1. Download (Ada 2 cara):<br/>
@@ -32,3 +32,9 @@ Setelah plugin terpasang, buka halaman jadwal kelas di SiX, lalu biarkan. Selama
 # Update
 
 Bila ada update baru, perbarui isi folder absensix (dengan git pull atau download zip dan extract-overwrite), lalu klik tombol reload di sebelah switch untuk mengaktifkan plugin. [chrome://extensions/](chrome://extensions/)
+
+# Development plan
+
+1. Auto-relogin (masih belum bisa dipastikan mungkin tidaknya)
+
+2. Support untuk firefox
