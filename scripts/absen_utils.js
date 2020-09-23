@@ -185,12 +185,13 @@ function markPresent(course) {
 	};
 
 	var primeRetry = function () {
-		setTimeout(() => {
+		var timeout = setTimeout(() => {
 			if (course[5] == -1 || course[5] == 1) { // if not yet succeded, known already attended, or already passed, schedule a retry..
 				getHTMLtxt(url, callback);
 				primeRetry();
 			}
-		}, repeat_delay * 60 * 1000); // .. in 5 minutes. TODO: make retry delay global var
+		}, repeat_delay * 60 * 1000); // .. in repeat_delay minutes. TODO: make retry delay global var
+		timeouts.push(timeout);
 	}
 
 	// There will be 1 extra retry after success by default. If nothing else can be done, the retry will be silent.
@@ -223,8 +224,8 @@ function main(courses) {
 		t_diff = untilEvent(courses[i]);
 
 		if (t_diff[0] > 0) { // Course still coming later
-			report(courses[i][3] + ": Scheduled attendance", true);
-			setTimeout(() => { markPresent(courses[i]) }, t_diff[0]);
+			report(courses[i][3] + ": Scheduled attendance", false);
+			timeouts.push(setTimeout(() => { markPresent(courses[i]) }, t_diff[0]));
 		} else if (t_diff[0] <= 0 && t_diff[1] >= 0) { // Course currently active, immediately initiate attempt
 			report("Attending " + courses[i][3], false, "info");
 			markPresent(courses[i]);
@@ -234,29 +235,43 @@ function main(courses) {
 	}
 }
 
-
+// Listener method for inputs from popup
 chrome.runtime.onMessage.addListener(
-	function (request) {
-		console.log(request);
-		start_offset = request[0]; // is this working?
-		end_offset = request[1];   // idk
-		repeat_delay = request[2]; // pls check
-	});
+	function (request, sender, sendResponse) {
+		if(sender.tab)
+			return;
+
+		report("Config updated.", false, "info", true);
+
+		start_offset = request[0];
+		end_offset = request[1];
+		repeat_delay = request[2];
+
+		for (var i = 0; i < timeouts.length; i++) {
+			clearTimeout(timeouts[i]);
+		}
+		timeouts = [];
+
+		main(courses);
+	}
+);
 
 // ========== EXEC ==========
-report("Auto-attendance has been loaded.");
+report("Auto-attendance has been loaded.", false, "info", true);
 
 // global vars
 start_offset = 1;
 end_offset = 5;
 repeat_delay = 5;
 
+timeouts = [];
+courses = [];
 
 try {
 	courses = getTodayCourses();
-	main(courses);
 }
 catch {
 	report("There is no active date today.");
 }
 
+main(courses);

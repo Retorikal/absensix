@@ -17,14 +17,18 @@ h4{
 }
 
 button {
-  background-color: #06b;
-  border: none;
-  color: white;
-  padding: 4px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  cursor: pointer;
+	background-color: #06b;
+	border: none;
+	color: white;
+ 	padding: 4px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	cursor: pointer;
+}
+
+button:active{
+	background-color: #036;
 }
 
 .flex{
