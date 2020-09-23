@@ -4,12 +4,12 @@
  */
 function report(msg, silent = false, msgType = "info") {
 	console.log("ab¢6: " + msg);
-	if(!silent){
+	if (!silent) {
 		$.notify(
-			{message: "ab¢6: " + msg}, {
-				type: msgType,
-				placement: {align: "center"}
-			}
+			{ message: "ab¢6: " + msg }, {
+			type: msgType,
+			placement: { align: "center" }
+		}
 		);
 	}
 }
@@ -126,7 +126,7 @@ function markPresent(course) {
 		var end = course[1].getTime();
 
 		if (submit_form == undefined) { // Tombolnya gaada
-			if (now > end + (end_offset * 60 * 1000)){ // Udah lewat after offset. Error code buat nyerah
+			if (now > end + (end_offset * 60 * 1000)) { // Udah lewat after offset. Error code buat nyerah
 				course[5] = 3;
 				report(course[3] + ": Attendance probably already ended. Sorry.", false, "danger");
 			} else { // Belum dibuka
@@ -153,8 +153,8 @@ function markPresent(course) {
 							course[5] = 0;
 							report(course[3] + ": Success", false, "success");
 						}
-					} else if (this.status == 200){
-					} else if (this.status == 404){
+					} else if (this.status == 200) {
+					} else if (this.status == 404) {
 						course[5] = -1;
 						report(course[3] + ": A not found error has occured", false, "danger");
 					} else {
@@ -171,9 +171,9 @@ function markPresent(course) {
 		}
 	};
 
-	var primeRetry = function(){
+	var primeRetry = function () {
 		setTimeout(() => {
-			if(course[5] == -1 || course[5] == 1){ // if not yet succeded, known already attended, or already passed, schedule a retry..
+			if (course[5] == -1 || course[5] == 1) { // if not yet succeded, known already attended, or already passed, schedule a retry..
 				getHTMLtxt(url, callback);
 				primeRetry();
 			}
@@ -196,22 +196,22 @@ function untilEvent(course) {
 	var targetStart = course[0].getTime();
 	var targetEnd = course[1].getTime();
 	return [
-		(targetStart - now) + (1000 * 60 * start_offset), 
-		(targetEnd - now) + (1000 * 60 * end_offset), 
-	]; 
+		(targetStart - now) + (1000 * 60 * start_offset),
+		(targetEnd - now) + (1000 * 60 * end_offset),
+	];
 }
 
 /* Main routine
  * Params: none
  * Retval: none
  */
-function main(courses){
+function main(courses) {
 	for (let i = 0; i < courses.length; i++) {
 		t_diff = untilEvent(courses[i]);
 
 		if (t_diff[0] > 0) { // Course still coming later
 			report(courses[i][3] + ": Scheduled attendance", true);
-			setTimeout(() => {markPresent(courses[i])}, t_diff[0]);
+			setTimeout(() => { markPresent(courses[i]) }, t_diff[0]);
 		} else if (t_diff[0] <= 0 && t_diff[1] >= 0) { // Course currently active, immediately initiate attempt
 			report("Attending " + courses[i][3], false, "info");
 			markPresent(courses[i]);
@@ -220,6 +220,14 @@ function main(courses){
 		}
 	}
 }
+
+chrome.runtime.onMessage.addListener(
+	function (request) {
+		console.log(request);
+		start_offset = request[0]; // is this working?
+		end_offset = request[1];   // idk
+		repeat_delay = request[2]; // pls check
+	});
 
 // ========== EXEC ==========
 report("Auto-attendance has been loaded.");

@@ -14,7 +14,7 @@
             title="Minutes to wait after course starts before starting attendance attempts">
                 Begin offset (minutes)
             </label>
-            <input type="number" class="input" name="interval" id="interval">
+            <input type="number" class="input" name="interval" id="start_offset">
         </div>
 
         <div class="flex row section">
@@ -22,7 +22,7 @@
             title="Minutes to wait after course ends before giving up attending">
                 End offset (minutes)
             </label>
-            <input type="number" class="input" name="interval" id="interval">
+            <input type="number" class="input" name="interval" id="end_offset">
         </div>
 
 		<div class="flex row section">
@@ -30,11 +30,12 @@
             title="Minutes to wait before retrying attendance, if the previous fails">
                 Retry interval (minutes)
             </label>
-			<input type="number" class="input" name="interval" id="interval">
+			<input type="number" class="input" name="interval" id="repeat_delay">
 		</div>
 
 		<div class="flex row section">
-            <button type="submit">Update</button>    
+            <button id="updateButton">Update</button>
+            <script src="popup_utils.js" type="text/javascript"></script>
         </div>
 
 	</form>
