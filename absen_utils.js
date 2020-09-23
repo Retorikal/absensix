@@ -121,7 +121,7 @@ function markPresent(course) {
 		var end = course[1].getTime();
 
 		if (submit_form == undefined) { // Tombolnya gaada
-			if (now > end){ // Udah lewat. Error code buat nyerah
+			if (now > end + (end_offset * 60 * 1000)){ // Udah lewat after offset atau ada keterangan "Presensi mandiri dapat..". Error code buat nyerah
 				course[5] = 3;
 				report(course[3] + ": Attendance probably already ended. Sorry.");
 			} else { // Belum dibuka
@@ -172,7 +172,7 @@ function markPresent(course) {
 				getHTMLtxt(url, callback);
 				primeRetry();
 			}
-		}, 8 * 60 * 1000); // .. in 8 minutes. TODO: make retry delay global var
+		}, repeat_delay * 60 * 1000); // .. in 5 minutes. TODO: make retry delay global var
 	}
 
 	// There will be 1 extra retry after success by default. If nothing else can be done, the retry will be silent.
@@ -183,14 +183,17 @@ function markPresent(course) {
 /* Function to get time difference between now and course start
  * Params:
  *		course: array containing (startTime, endTime, link string, courseCode, courseName, status)
- * Retval: array containing time difference in ms: (to course start (+ 2 minute offset)), and (to course finish).
+ * Retval: array containing time difference in ms: (to course start (+ offset)), and (to course finish (+ offset)).
  * TODO: when exposing configuration, time offset needs to be set
  */
 function untilEvent(course) {
 	var now = new Date().getTime();
 	var targetStart = course[0].getTime();
 	var targetEnd = course[1].getTime();
-	return [(targetStart - now) + (1000 * 60 * 1), (targetEnd - now)]; // offset 1 minute
+	return [
+		(targetStart - now) + (1000 * 60 * start_offset), 
+		(targetEnd - now) + (1000 * 60 * end_offset), 
+	]; 
 }
 
 /* Main routine
@@ -215,6 +218,13 @@ function main(courses){
 
 // ========== EXEC ==========
 report("Auto-attendance has been loaded.");
+
+// global vars
+
+start_offset = 1;
+end_offset = 5;
+repeat_delay = 5;
+
 
 try {
 	courses = getTodayCourses();

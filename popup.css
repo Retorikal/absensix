@@ -1,0 +1,53 @@
+body{
+	font-family: 'Roboto', sans-serif;
+	background-color: #f9f9f9
+}
+
+h2{
+	color: #036;
+}
+
+h4{
+	color: #05a;
+}
+
+*{
+	font-family: inherit;
+	box-sizing: border-box
+}
+
+.flex{
+	display: flex;
+	justify-content: space-between;
+}
+
+.row{
+	flex-direction: row;
+}
+
+.section{
+	margin-bottom: 0.5rem;
+}
+
+.tooltip{
+	cursor: help;
+	color: #036;
+}
+
+.input{
+	width: 50px;
+}
+
+.sponsor{
+	padding: 4px;
+	margin-bottom: 0.5rem;
+	border-radius: 10px;
+	background-color: #036;
+	color: white;
+}
+
+.inline{
+	display: inline-block;
+	vertical-align: middle;
+	padding-right: 3px;
+}

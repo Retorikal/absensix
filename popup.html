@@ -1,18 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        input {
-            margin-bottom: 0.5rem;
-        }
-    </style>
+	<link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 </head>
-<body>
-    <form>
-        <label for="interval">Interval (ms)</label>
-        <input type="number" name="interval" id="interval">
-        
-        <button type="submit">Submit</button>
-    </form>
+<body style="width: 200px">
+
+    <center><h2>ab&cent;6 auto-attendance</h2></center>
+    <center><h4>Hover on options to see details.</h4><center>
+	<form>
+        <div class="flex row section">
+            <label for="interval"class="tooltip"
+            title="Minutes to wait after course starts before starting attendance attempts">
+                Begin offset (minutes)
+            </label>
+            <input type="number" class="input" name="interval" id="interval">
+        </div>
+
+        <div class="flex row section">
+            <label for="interval" class="tooltip"
+            title="Minutes to wait after course ends before giving up attending">
+                End offset (minutes)
+            </label>
+            <input type="number" class="input" name="interval" id="interval">
+        </div>
+
+		<div class="flex row section">
+			<label for="interval"class="tooltip"
+            title="Minutes to wait before retrying attendance, if the previous fails">
+                Retry interval (minutes)
+            </label>
+			<input type="number" class="input" name="interval" id="interval">
+		</div>
+
+		<div class="flex row section">
+            <button type="submit">Update</button>    
+        </div>
+
+	</form>
+    <a class="flex row sponsor section" target="_blank" href="https://trakteer.id/Retorikal">
+        <img class="inline" src="https://lelogama.go-jek.com/service_icon_text/gopay_inverse.svg">
+        <span class="inline">Support at trakteer.id</span>
+    </a>
 </body>
 </html>
