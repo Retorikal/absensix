@@ -1,6 +1,8 @@
 # absensix
 Auto-absen untuk sistem informasi akademik ITB berupa plugin chrome.
 
+Plugin ini dibuat untuk Chrome, tapi diketahui bisa bekerja pada Microsoft Edge. Prosedur instalasi mungkin berbeda.
+
 # WARNING!
 Plugin ini masih dalam tahap testing, sehingga reliabilitynya belum bisa dijamin.</br>
 Beberapa masalah yang diketahui: </br>
@@ -8,9 +10,10 @@ Beberapa masalah yang diketahui: </br>
 
 2. Login timeout
 
-3. Konfigurasi di popup belum fungsional
+# Cara pakai
+Setelah plugin terpasang, buka halaman jadwal kelas di SiX, lalu biarkan. Selama halaman terbuka, absensi akan berjalan secara otomatis.
 
-# Instalasi
+# Instalasi untuk Google Chrome
 1. Download (Ada 2 cara):<br/>
 Cara 1: Download zip file proyek ini dari github: https://github.com/Retorikal/absensix/archive/master.zip, lalu extract<br/>
 Cara 2: Clone git repository
@@ -25,16 +28,19 @@ Cara 2: Clone git repository
 
 6. Plugin sudah bisa dipakai. Bila ada pesan muncul saat masuk ke halaman jadwal kelas SiX, maka extension sudah termuat dengan benar.
 
-# Cara pakai
+# Konfigurasi
+Ada 3 parameter yang bisa dikonfigurasi agar perilaku extension lebih cocok dengan pola absensi masing-masing. Konfigurasi ini dapat diakses melalui icon extension di sebelah kanan URL bar.
 
-Setelah plugin terpasang, buka halaman jadwal kelas di SiX, lalu biarkan. Selama halaman terbuka, absensi akan berjalan secara otomatis.
+1. Begin offset: waktu yang harus ditunggu plugin sebelum kuliah sebelum mulai mencoba mengabsen. Bisa bernilai negatif.
+
+2. End offset: waktu yang harus ditunggu plugin setelah kuliah selesai sebelum menghentikan percobaan absen. Bisa bernilai negatif.
+
+3. Retry interval: Jeda antara percobaan absensi
 
 # Update
-
 Bila ada update baru, perbarui isi folder absensix (dengan git pull atau download zip dan extract-overwrite), lalu klik tombol reload di sebelah switch untuk mengaktifkan plugin di [chrome://extensions/](chrome://extensions/)
 
 # Development plan
-
 1. Auto-relogin (masih belum bisa dipastikan mungkin tidaknya)
 
 2. Support untuk firefox

@@ -15,7 +15,9 @@ function populateFields (){
 function updateConfig() {
     configVal[0] = document.getElementById("start_offset").value;
     configVal[1] = document.getElementById("end_offset").value;
-    configVal[2] = document.getElementById("repeat_delay").value;
+    configVal[2] = Math.abs(document.getElementById("repeat_delay").value);
+
+	populateFields();
 
     //Sending message to content
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
