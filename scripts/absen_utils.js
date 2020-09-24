@@ -268,10 +268,18 @@ chrome.runtime.onMessage.addListener(
 report("Auto-attendance has been loaded.", false, "info", true);
 report("Due to login timeout issues, try logging out and in again before leaving this tab open. This will be addressed soon, so check for updates.", false, "warning", false);
 
-// global vars
+// Global vars
 start_offset = 1;
 end_offset = 5;
 repeat_delay = 5;
+
+// Set global vars according to storage
+chrome.storage.local.get({"start_offset" : 1, "end_offset" : 5, "repeat_delay" : 5}, function(vals){
+	start_offset = vals.start_offset;
+	end_offset = vals.end_offset;
+	repeat_delay = vals.repeat_delay;
+});
+
 
 timeouts = [];
 courses = [];
