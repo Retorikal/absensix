@@ -84,3 +84,12 @@ button:active{
 	height: 16px;
 	width: auto;
 }
+
+.baseline {
+	align-items: baseline;
+}
+
+.link {
+	color: #06b;
+	font-weight: bold;
+}

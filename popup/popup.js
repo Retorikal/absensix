@@ -11,6 +11,9 @@ window.onload = function () {
     	populateFields();
 	});
 	
+	var timestamp = new Date().toLocaleString();
+	var initialLog = `${timestamp} : Config successfully loaded`;
+	download("absensix_log.txt", initialLog);
 }
 
 function populateFields (){
@@ -38,4 +41,10 @@ function updateConfig() {
         chrome.tabs.sendMessage(tabs[0].id, configVal);
         console.log(configVal);
     });
+}
+
+function download(filename, text) {
+	var element = document.querySelector("a.link");
+	element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(text));
+	element.setAttribute("download", filename);
 }
