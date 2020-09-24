@@ -273,17 +273,10 @@ start_offset = 1;
 end_offset = 5;
 repeat_delay = 5;
 
-// Set global vars according to storage
-chrome.storage.local.get({"start_offset" : 1, "end_offset" : 5, "repeat_delay" : 5}, function(vals){
-	start_offset = vals.start_offset;
-	end_offset = vals.end_offset;
-	repeat_delay = vals.repeat_delay;
-});
-
-
 timeouts = [];
 courses = [];
 
+// Get courses list
 try {
 	courses = getTodayCourses();
 }
@@ -291,4 +284,13 @@ catch {
 	report("There is no active date today.");
 }
 
-main(courses);
+// Set global vars according to storage
+chrome.storage.local.get({"start_offset" : 1, "end_offset" : 5, "repeat_delay" : 5}, function(vals){
+	start_offset = vals.start_offset;
+	end_offset = vals.end_offset;
+	repeat_delay = vals.repeat_delay;
+
+	main(courses);
+});
+
+
