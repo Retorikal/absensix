@@ -241,6 +241,17 @@ function main(courses) {
 			report("Skipping " + courses[i][3], true, "info");
 		}
 	}
+
+	// Prepare a page refresh after midnight to solve attending for days in a row
+	var now = new Date();
+	var restart = new Date();
+	restart.setHours(0, 15, 0, 0);
+	restart.setDate(restart.getDate() + 1);
+
+	let t = setTimeout(() => { 
+		location.reload();
+	}, restart.getTime() - now.getTime());
+	timeouts.push(t);
 }
 
 // Listener method for inputs from popup
