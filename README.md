@@ -20,10 +20,10 @@ Cara 2: Clone git repository
 
 2. Buka [chrome://extensions/](chrome://extensions/)
 
-3. Nyalakan Developer Mode (switch di pojok kanan atas)
+3. Nyalakan Developer Mode (switch di pojok kanan atas)</br>
 ![Devmode](images/devmode.png?raw=true "Devmode")
 
-4. Klik "Load Unpacked"
+4. Klik "Load Unpacked"</br>
 ![Unpack](images/unpack.png?raw=true "Unpack")
 
 5. Browse lalu klik folder "absensix" (didapatkan dari langkah pertama)
@@ -31,11 +31,11 @@ Cara 2: Clone git repository
 6. Pin icon extension ke taskbar. </br>
 ![Pin](images/pinning.png?raw=true "Pin")
 
-7. Plugin sudah bisa dipakai. Bila ada pesan muncul saat masuk ke halaman jadwal kelas SiX, maka extension sudah termuat dengan benar.
+7. Plugin sudah bisa dipakai. Bila ada pesan muncul saat masuk ke halaman jadwal kelas SiX, maka extension sudah termuat dengan benar.</br>
 ![Loaded](images/loaded.png?raw=true "Loaded")
 
 # Konfigurasi
-Ada 3 parameter yang bisa dikonfigurasi agar perilaku extension lebih cocok dengan pola absensi masing-masing. Konfigurasi ini dapat diakses melalui icon extension di sebelah kanan URL bar.
+Ada 3 parameter yang bisa dikonfigurasi agar perilaku extension lebih cocok dengan pola absensi masing-masing. Konfigurasi ini dapat diakses melalui icon extension di sebelah kanan URL bar.</br>
 ![Popup](images/popup.png?raw=true "Popup")
 
 1. Begin offset: waktu yang harus ditunggu plugin sebelum kuliah sebelum mulai mencoba mengabsen. Bisa bernilai negatif.
