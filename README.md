@@ -36,6 +36,7 @@ Cara 2: Clone git repository
 
 # Konfigurasi
 Ada 3 parameter yang bisa dikonfigurasi agar perilaku extension lebih cocok dengan pola absensi masing-masing. Konfigurasi ini dapat diakses melalui icon extension di sebelah kanan URL bar.
+![Popup](images/popup.png?raw=true "Popup")
 
 1. Begin offset: waktu yang harus ditunggu plugin sebelum kuliah sebelum mulai mencoba mengabsen. Bisa bernilai negatif.
 
