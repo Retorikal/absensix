@@ -3,7 +3,7 @@
 
 	"name": "Absensix",
 	"description": "Extension for SIX auto-attendance.",
-	"version": "1.0",
+	"version": "0.1.1",
 
 	"browser_action": {
 		"default_popup": "/popup/popup.html",
@@ -16,7 +16,7 @@
 		"js": [
 			"/scripts/jquery-3.5.1.min.js",
 			"/scripts/bootstrap-notify.min.js",
-			"/scripts/absen_utils.js"
+			"/scripts/absen_utils.min.js"
 		]
 	}],
 
