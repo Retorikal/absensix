@@ -136,8 +136,6 @@ function markPresent(course) {
 		var now = (new Date()).getTime();
 		var end = course[1].getTime();
 
-		report(course[3] + ": " + course[4] + " now active!", true, "info", true);
-
 		if (submit_form == undefined) { // Tombolnya gaada
 			if (now > end + (end_offset * 60 * 1000)) { // Udah lewat after offset. Error code buat nyerah
 				course[5] = 3;
@@ -177,25 +175,30 @@ function markPresent(course) {
 				};
 
 				submit_xhttp.send(submit_params);
-			} else { // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
+			} else if (this.responseText.search("Tandai Tidak Hadir") != -1){ // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
 				course[5] = 2;
 				report(course[3] + ": Already attended", false, "info", true);
+			} else { // some unkown error currently undiscovered
+				course[5] = -1;
+				report(course[3] + ": An unknown error has occured. Please reload the page.", false, "danger", true);
 			}
 		}
 	};
 
 	var primeRetry = function () {
-		var timeout = setTimeout(() => {
-			if (course[5] == -1 || course[5] == 1) { // if not yet succeded, known already attended, or already passed, schedule a retry..
+		let t = setTimeout(() => {
+			if (course[5] == -1 || course[5] == 1) { // if attendance not yet open or an unknown error occured, schedule a retry..
 				getHTMLtxt(url, callback);
 				primeRetry();
 			}
+			timeouts.splice(timeouts.indexOf(t), 1); // self-remove from timeouts list
 		}, repeat_delay * 60 * 1000); // .. in repeat_delay minutes. TODO: make retry delay global var
-		timeouts.push(timeout);
+
+		timeouts.push(t);
 	}
 
-	// There will be 1 extra retry after success by default. If nothing else can be done, the retry will be silent.
-	getHTMLtxt(url, callback);
+	report(course[3] + ": " + course[4] + " now active!", true, "info", true);
+	getHTMLtxt(url, callback); // There will be 1 extra retry after success by default. If nothing else can be done, the retry will be silent.
 	primeRetry();
 }
 
@@ -225,7 +228,12 @@ function main(courses) {
 
 		if (t_diff[0] > 0) { // Course still coming later
 			report(courses[i][3] + ": Scheduled attendance", false);
-			timeouts.push(setTimeout(() => { markPresent(courses[i]) }, t_diff[0]));
+
+			let t = setTimeout(() => { 
+				markPresent(courses[i]); 
+				timeouts.splice(timeouts.indexOf(t), 1); // self-remove from timeouts list
+			}, t_diff[0]);
+			timeouts.push(t);
 		} else if (t_diff[0] <= 0 && t_diff[1] >= 0) { // Course currently active, immediately initiate attempt
 			report("Attending " + courses[i][3], false, "info");
 			markPresent(courses[i]);
@@ -258,6 +266,7 @@ chrome.runtime.onMessage.addListener(
 
 // ========== EXEC ==========
 report("Auto-attendance has been loaded.", false, "info", true);
+report("Due to login timeout issues, try logging out and in again before leaving this tab open. This will be addressed soon, so check for updates.", false, "warning", false);
 
 // global vars
 start_offset = 1;
