@@ -44,3 +44,5 @@ Bila ada update baru, perbarui isi folder absensix (dengan git pull atau downloa
 1. Auto-relogin (masih belum bisa dipastikan mungkin tidaknya)
 
 2. Support untuk firefox
+
+3. Generate report log txt file
