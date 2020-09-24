@@ -175,7 +175,7 @@ function markPresent(course) {
 				};
 
 				submit_xhttp.send(submit_params);
-			} else if (this.responseText.search("Tandai Tidak Hadir") != -1){ // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
+			} else if (txt.search("Tandai Tidak Hadir") != -1){ // Tulisanya "Tandai Tidak Hadir"; berati sudah diabsen
 				course[5] = 2;
 				report(course[3] + ": Already attended", false, "info", true);
 			} else { // some unkown error currently undiscovered
