@@ -3,17 +3,16 @@ configVal = [1, 5, 5]; // default config
 window.onload = function () {
 	document.getElementById("updateButton").addEventListener("click", updateConfig);
 	
-	chrome.storage.local.get({"start_offset" : 1, "end_offset" : 5, "repeat_delay" : 5}, function(vals){
+	chrome.storage.local.get({"log_str": "", "start_offset" : 1, "end_offset" : 5, "repeat_delay" : 5}, function(vals){
     	configVal[0] = vals.start_offset;
     	configVal[1] = vals.end_offset;
-    	configVal[2] = vals.repeat_delay;
+		configVal[2] = vals.repeat_delay;
 
-    	populateFields();
+		populateFields();
+		
+		download("absensix_log.txt", vals.log_str);
 	});
 	
-	var timestamp = new Date().toLocaleString();
-	var initialLog = `${timestamp} : Config successfully loaded`;
-	download("absensix_log.txt", initialLog);
 }
 
 function populateFields (){

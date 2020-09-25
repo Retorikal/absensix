@@ -1,3 +1,12 @@
+/* Parse log with timestamp
+ * Params: log string
+ * Retval: parsed log string with timestamp
+ */
+function log(msg) {
+	timestamp = (new Date()).toLocaleString();
+	return `${timestamp} : ${msg}\n`;
+}
+
 /* Feedback function
  * Params: 
  * 		msg: message
@@ -220,14 +229,18 @@ function untilEvent(course) {
 
 /* Main routine
  * Params: none
- * Retval: none
+ * Retval: log string
  */
 function main(courses) {
+	log_str = "";
 	for (let i = 0; i < courses.length; i++) {
 		t_diff = untilEvent(courses[i]);
 
+		msg = "";
 		if (t_diff[0] > 0) { // Course still coming later
-			report(courses[i][3] + ": Scheduled attendance", false);
+			msg = courses[i][3] + ": Scheduled attendance";
+			log_str += log(msg);
+			report(msg, false);
 
 			let t = setTimeout(() => { 
 				markPresent(courses[i]); 
@@ -235,10 +248,14 @@ function main(courses) {
 			}, t_diff[0]);
 			timeouts.push(t);
 		} else if (t_diff[0] <= 0 && t_diff[1] >= 0) { // Course currently active, immediately initiate attempt
-			report("Attending " + courses[i][3], false, "info");
+			msg = "Attending " + courses[i][3];
+			log_str += log(msg);
+			report(msg, false, "info");
 			markPresent(courses[i]);
 		} else { // Course has passed, ignore
-			report("Skipping " + courses[i][3], true, "info");
+			msg = "Skipping " + courses[i][3];
+			log_str += log(msg);
+			report(msg, true, "info");
 		}
 	}
 
@@ -252,6 +269,9 @@ function main(courses) {
 		location.reload();
 	}, restart.getTime() - now.getTime());
 	timeouts.push(t);
+
+	// console.log(log_str);
+	return log_str;
 }
 
 // Listener method for inputs from popup
@@ -271,7 +291,9 @@ chrome.runtime.onMessage.addListener(
 		}
 		timeouts = [];
 
-		main(courses);
+		// Update log
+		log_str = main(courses);
+		chrome.storage.local.set({ "log_str" : log_str }, function(){});
 	}
 );
 
@@ -283,6 +305,7 @@ report("Due to login timeout issues, try logging out and in again before leaving
 start_offset = 1;
 end_offset = 5;
 repeat_delay = 5;
+log_str = "init";
 
 timeouts = [];
 courses = [];
@@ -301,7 +324,7 @@ chrome.storage.local.get({"start_offset" : 1, "end_offset" : 5, "repeat_delay" :
 	end_offset = vals.end_offset;
 	repeat_delay = vals.repeat_delay;
 
-	main(courses);
+	// Update log
+	log_str = main(courses);
+	chrome.storage.local.set({ "log_str" : log_str }, function(){});
 });
-
-
