@@ -116,7 +116,6 @@ function getHTMLtxt(url, callback) {
 		}
 	};
 
-	//xhttp.open("GET", "/app/mahasiswa:13318056+2020-1/kelas/pertemuan/mhs/460679/93642", true);
 	xhttp.open("GET", url, true);
 	xhttp.send();
 }
