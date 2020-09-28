@@ -111,8 +111,15 @@ function getHTMLtxt(url, callback) {
 	var xhttp = new XMLHttpRequest();
 
 	xhttp.onreadystatechange = function () {
+		console.log("Head: " + this.getAllResponseHeaders());
+		console.log("Resp: " + this.responseText);
 		if (this.readyState == 4 && this.status == 200) {
-			callback("<div>" + this.responseText + "</div>");
+			if(this.responseText == ""){
+				relogUrl = "https://login.itb.ac.id/cas/login?service=" + encodeURIComponent(window.location.href.replace("+", "%2B"));
+				window.location.href = relogUrl;
+			}else{
+				callback("<div>" + this.responseText + "</div>");
+			}
 		}
 	};
 
@@ -239,7 +246,6 @@ function main(courses) {
 		if (t_diff[0] > 0) { // Course still coming later
 			msg = courses[i][3] + ": Scheduled attendance";
 			log_str += log(msg);
-			report(msg, false);
 
 			let t = setTimeout(() => { 
 				markPresent(courses[i]); 
@@ -249,14 +255,16 @@ function main(courses) {
 		} else if (t_diff[0] <= 0 && t_diff[1] >= 0) { // Course currently active, immediately initiate attempt
 			msg = "Attending " + courses[i][3];
 			log_str += log(msg);
-			report(msg, false, "info");
 			markPresent(courses[i]);
 		} else { // Course has passed, ignore
 			msg = "Skipping " + courses[i][3];
 			log_str += log(msg);
-			report(msg, true, "info");
 		}
+
+		report(msg);
 	}
+
+	chrome.storage.local.set({"autorelog" : false}, function(){});
 
 	// Prepare a page refresh after midnight to solve attending for days in a row
 	var now = new Date();
@@ -269,7 +277,6 @@ function main(courses) {
 	}, restart.getTime() - now.getTime());
 	timeouts.push(t);
 
-	// console.log(log_str);
 	return log_str;
 }
 
@@ -297,17 +304,19 @@ chrome.runtime.onMessage.addListener(
 );
 
 // ========== EXEC ==========
-report("Auto-attendance has been loaded.", false, "info", true);
-report("Due to login timeout issues, try logging out and in again before leaving this tab open. This will be addressed soon, so check for updates.", false, "warning", false);
 
 // Global vars
 start_offset = 1;
 end_offset = 5;
 repeat_delay = 5;
+autorelog = false; // Flag to indicate that page is loaded because automatic login
 log_str = "init";
 
 timeouts = [];
 courses = [];
+
+report("Auto-attendance has been loaded.", false, "info", !autorelog); // Don't report if page loaded from auto-login
+report("Due to login timeout issues, try logging out and in again before leaving this tab open. This will be addressed soon, so check for updates.", false, "warning", false);
 
 // Get courses list
 try {
@@ -318,12 +327,13 @@ catch {
 }
 
 // Set global vars according to storage
-chrome.storage.local.get({"start_offset" : 1, "end_offset" : 5, "repeat_delay" : 5}, function(vals){
+chrome.storage.local.get({"start_offset" : 1, "end_offset" : 5, "repeat_delay" : 5, "autorelog": false}, function(vals){
 	start_offset = vals.start_offset;
 	end_offset = vals.end_offset;
 	repeat_delay = vals.repeat_delay;
+	autorelog = vals.autorelog;
 
 	// Update log
 	log_str = main(courses);
-	chrome.storage.local.set({ "log_str" : log_str }, function(){});
+	chrome.storage.local.set({"log_str" : log_str }, function(){});
 });
