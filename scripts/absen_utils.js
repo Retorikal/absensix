@@ -1,13 +1,17 @@
-/* Parse log with timestamp
- * Params: log string
- * Retval: parsed log string with timestamp
+/* Appends log_str to chrome storage, then clears log_str.
+ * Params: none
+ * Retval: none
  */
-function log(msg) {
-	timestamp = (new Date()).toLocaleString();
-	return `${timestamp} : ${msg}\n`;
+function append_log(){
+	chrome.storage.local.get({"log_str" : ""}, function(vals){
+		var updated_str = vals.log_str + log_str;
+		chrome.storage.local.set({ "log_str" : updated_str }, function(){
+			log_str = "";
+		});
+	});
 }
 
-/* Feedback function
+/* Feedback function. Shows desired popup and appends log to local.
  * Params: 
  * 		msg: message
  * 		silent: boolean, determines if the message appears as page notification
@@ -32,6 +36,9 @@ function report(msg, silent = false, msgType = "info", system = false) {
 			icon: '/favicon.ico'
 		});
 	}
+
+	timestamp = (new Date()).toLocaleString(); 
+	log_str += `${timestamp} : ${msg}\n`;
 }
 
 /* Function to parse time in string format to Date object
@@ -192,6 +199,7 @@ function markPresent(course) {
 				report(course[3] + ": An unknown error has occured. Please reload the page.", false, "danger", true);
 			}
 		}
+		append_log();
 	};
 
 	var primeRetry = function () {
@@ -207,6 +215,7 @@ function markPresent(course) {
 	}
 
 	report(course[3] + ": " + course[4] + " now active!", true, "info", true);
+	append_log();
 	getHTMLtxt(url, callback); // There will be 1 extra retry after success by default. If nothing else can be done, the retry will be silent.
 	primeRetry();
 }
@@ -229,33 +238,24 @@ function untilEvent(course) {
 
 /* Main routine
  * Params: none
- * Retval: log string
+ * Retval: none
  */
 function main(courses) {
-	log_str = "";
 	for (let i = 0; i < courses.length; i++) {
 		t_diff = untilEvent(courses[i]);
 
-		msg = "";
 		if (t_diff[0] > 0) { // Course still coming later
-			msg = courses[i][3] + ": Scheduled attendance";
-			log_str += log(msg);
-			report(msg, false);
-
+			report(courses[i][3] + ": Scheduled attendance", false);
 			let t = setTimeout(() => { 
 				markPresent(courses[i]); 
 				timeouts.splice(timeouts.indexOf(t), 1); // self-remove from timeouts list
 			}, t_diff[0]);
 			timeouts.push(t);
 		} else if (t_diff[0] <= 0 && t_diff[1] >= 0) { // Course currently active, immediately initiate attempt
-			msg = "Attending " + courses[i][3];
-			log_str += log(msg);
-			report(msg, false, "info");
+			report("Attending " + courses[i][3], false, "info");
 			markPresent(courses[i]);
 		} else { // Course has passed, ignore
-			msg = "Skipping " + courses[i][3];
-			log_str += log(msg);
-			report(msg, true, "info");
+			report("Skipping " + courses[i][3], true, "info");
 		}
 	}
 
@@ -270,8 +270,7 @@ function main(courses) {
 	}, restart.getTime() - now.getTime());
 	timeouts.push(t);
 
-	// console.log(log_str);
-	return log_str;
+	append_log();
 }
 
 // Listener method for inputs from popup
@@ -291,24 +290,24 @@ chrome.runtime.onMessage.addListener(
 		}
 		timeouts = [];
 
-		// Update log
-		log_str = main(courses);
-		chrome.storage.local.set({ "log_str" : log_str }, function(){});
+		main(courses);
 	}
 );
 
 // ========== EXEC ==========
-report("Auto-attendance has been loaded.", false, "info", true);
-report("Due to login timeout issues, try logging out and in again before leaving this tab open. This will be addressed soon, so check for updates.", false, "warning", false);
 
 // Global vars
 start_offset = 1;
 end_offset = 5;
 repeat_delay = 5;
-log_str = "init";
+log_str = "";
 
 timeouts = [];
 courses = [];
+
+
+report("Auto-attendance has been loaded.", false, "info", true);
+report("Due to login timeout issues, try logging out and in again before leaving this tab open. This will be addressed soon, so check for updates.", false, "warning", false);
 
 // Get courses list
 try {
@@ -324,7 +323,6 @@ chrome.storage.local.get({"start_offset" : 1, "end_offset" : 5, "repeat_delay" :
 	end_offset = vals.end_offset;
 	repeat_delay = vals.repeat_delay;
 
-	// Update log
-	log_str = main(courses);
-	chrome.storage.local.set({ "log_str" : log_str }, function(){});
+	// do main 
+	main(courses);
 });
