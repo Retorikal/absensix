@@ -12,7 +12,10 @@
 	},
 
 	"content_scripts": [{
-		"matches": [ "*://akademik.itb.ac.id/app/*/kelas/pertemuan/jadwal/mahasiswa" ],
+		"matches": [
+			"*://akademik.itb.ac.id/app/*/kelas/pertemuan/jadwal/mahasiswa",
+			"*://akademik.itb.ac.id/app/K/*/kelas/jadwal/mahasiswa"
+		],
 		"js": [
 			"/scripts/jquery-3.5.1.min.js",
 			"/scripts/bootstrap-notify.min.js",
