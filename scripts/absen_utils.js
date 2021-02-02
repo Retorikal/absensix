@@ -39,6 +39,8 @@ function report(msg, silent = false, msgType = "info", system = false) {
 
 	timestamp = (new Date()).toLocaleString(); 
 	log_str += `${timestamp} : ${msg}\n`;
+
+	append_log();
 }
 
 /* Function to parse time in string format to Date object
@@ -199,7 +201,6 @@ function markPresent(course) {
 				report(course[3] + ": An unknown error has occured. Please reload the page.", false, "danger", true);
 			}
 		}
-		append_log();
 	};
 
 	var primeRetry = function () {
@@ -215,7 +216,6 @@ function markPresent(course) {
 	}
 
 	report(course[3] + ": " + course[4] + " now active!", true, "info", true);
-	append_log();
 	getHTMLtxt(url, callback); // There will be 1 extra retry after success by default. If nothing else can be done, the retry will be silent.
 	primeRetry();
 }
@@ -269,8 +269,6 @@ function main(courses) {
 		location.reload();
 	}, restart.getTime() - now.getTime());
 	timeouts.push(t);
-
-	append_log();
 }
 
 // Listener method for inputs from popup
